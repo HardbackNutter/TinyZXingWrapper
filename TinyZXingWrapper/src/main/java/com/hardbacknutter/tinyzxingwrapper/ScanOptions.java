@@ -68,18 +68,25 @@ public class ScanOptions {
 
     /**
      * Set the desired barcode formats to try and decode.
+     * <p>
+     * <strong>IMPORTANT:</strong>
+     * The value is stored as an {@link ArrayList} with the {@code String} values
+     * of the {@link BarcodeFormat} enum names !
      *
      * @param list of {@link BarcodeFormat}s to try decoding
      *
      * @return this
      *
      * @see DecodeHintType#POSSIBLE_FORMATS
+     * @see BarcodeScanner.Builder#addHints(Bundle)
      */
     @NonNull
     public ScanOptions setBarcodeFormats(@NonNull final List<BarcodeFormat> list) {
         if (!list.isEmpty()) {
             intent.putStringArrayListExtra(DecodeHintType.POSSIBLE_FORMATS.name(),
                                            list.stream()
+                                               // Note we store the NAME of the enum
+                                               // so we do not have to parcel the enum values
                                                .map(Enum::name)
                                                .collect(Collectors.toCollection(ArrayList::new)));
         }

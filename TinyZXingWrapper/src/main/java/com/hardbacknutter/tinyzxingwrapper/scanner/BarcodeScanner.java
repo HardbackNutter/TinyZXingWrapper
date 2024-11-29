@@ -41,6 +41,7 @@ import java.util.concurrent.Executors;
 import java.util.stream.Collectors;
 
 import com.hardbacknutter.tinyzxingwrapper.ScanContract;
+import com.hardbacknutter.tinyzxingwrapper.ScanOptions;
 
 /**
  * The main scanner code.
@@ -372,16 +373,15 @@ public class BarcodeScanner
          * <p>
          * Only used if {@link #setDecoderFactory(DecoderFactory)} is <strong>NOT</strong> called.
          *
-         * @param barcodeFormats names of {@link BarcodeFormat}s to scan for
+         * @param barcodeFormats the {@link BarcodeFormat}s to scan for
          *
          * @return this
          */
         @NonNull
         public Builder setBarcodeFormats(@NonNull final List<BarcodeFormat> barcodeFormats) {
-            hints.put(DecodeHintType.POSSIBLE_FORMATS,
-                      barcodeFormats.stream()
-                                    .map(Enum::name)
-                                    .collect(Collectors.toCollection(ArrayList::new)));
+            // Used directly, so we just store the enums.
+            // For intent use, see #addHints
+            hints.put(DecodeHintType.POSSIBLE_FORMATS, new ArrayList<>(barcodeFormats));
             return this;
         }
 
@@ -449,7 +449,12 @@ public class BarcodeScanner
          * Add a collection of hints.
          * If the data type does not match the hint type, the hint is quietly ignored.
          * <p>
-         * {@link DecodeHintType#NEED_RESULT_POINT_CALLBACK} is NOT supported
+         * <strong>IMPORTANT:</strong>
+         * {@link DecodeHintType#POSSIBLE_FORMATS} is expected to have as value
+         * an {@link ArrayList} with the {@code String} values of the {@link BarcodeFormat}
+         * enum names !
+         * <p>
+         * Note that {@link DecodeHintType#NEED_RESULT_POINT_CALLBACK} is NOT supported
          * as it's used internally.
          * <p>
          * Only used if {@link #setDecoderFactory(DecoderFactory)} is <strong>NOT</strong> called.
@@ -457,6 +462,8 @@ public class BarcodeScanner
          * @param args a Bundle with hints; may contain other options which will be ignored.
          *
          * @return this
+         *
+         * @see ScanOptions#setBarcodeFormats(List)
          */
         @NonNull
         public Builder addHints(@Nullable final Bundle args) {
@@ -467,9 +474,34 @@ public class BarcodeScanner
                       .forEach(hintType -> {
                           final String hintName = hintType.name();
                           if (args.containsKey(hintName)) {
+                              // A switch 'hint': if present, store it with a boolean 'True'
+                              // (this is faster than 6 string equality test)
+                              // PURE_BARCODE
+                              // TRY_HARDER
+                              // ASSUME_CODE_39_CHECK_DIGIT
+                              // ASSUME_GS1
+                              // RETURN_CODABAR_START_END
+                              // ALSO_INVERTED
                               if (hintType.getValueType().equals(Void.class)) {
                                   this.hints.put(hintType, Boolean.TRUE);
+
+                              } else if ("POSSIBLE_FORMATS".equals(hintName)) {
+                                  // the value is ArrayList of strings with the enum names.
+                                  // Convert them back to the actual enums.
+                                  final ArrayList<String> list = args.getStringArrayList(
+                                          hintName);
+                                  if (list != null) {
+                                      final List<BarcodeFormat> formats =
+                                              list.stream()
+                                                  .map(BarcodeFormat::valueOf)
+                                                  .collect(Collectors.toList());
+                                      this.hints.put(hintType, formats);
+                                  }
                               } else {
+                                  // OTHER
+                                  // CHARACTER_SET
+                                  // ALLOWED_LENGTHS
+                                  // ALLOWED_EAN_EXTENSIONS
                                   final Object hintData = args.get(hintName);
                                   if (hintType.getValueType().isInstance(hintData)) {
                                       this.hints.put(hintType, hintData);
