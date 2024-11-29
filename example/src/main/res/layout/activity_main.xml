@@ -1,85 +1,95 @@
-<ScrollView
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.coordinatorlayout.widget.CoordinatorLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.hardbacknutter.tinyzxingwrapper.CaptureActivity">
+    android:fitsSystemWindows="true"
+    >
+
+    <com.google.android.material.appbar.AppBarLayout
+        android:id="@+id/app_bar_layout"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        >
+
+        <com.google.android.material.appbar.MaterialToolbar
+            android:id="@+id/toolbar"
+            style="@style/Toolbar.Activity"
+            app:subtitle="@string/msg_intro"
+            app:title="@string/app_name"
+            />
+    </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
         android:paddingLeft="16dp"
         android:paddingTop="16dp"
         android:paddingRight="16dp"
-        android:paddingBottom="16dp">
-
-        <TextView
-            android:id="@+id/title"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/app_name"
-            android:textAppearance="?attr/textAppearanceTitleLarge"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            />
-
-        <TextView
-            android:id="@+id/subtitle"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/msg_intro"
-            android:textAppearance="?attr/textAppearanceTitleMedium"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/title"
-            />
+        android:paddingBottom="16dp"
+        app:layout_behavior="@string/appbar_scrolling_view_behavior">
 
         <Button
-            android:id="@+id/basic_scan"
+            android:id="@+id/btn_scan_generic"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="32dp"
-            android:text="@string/btn_scan_barcode"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_scan_generic"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/subtitle" />
+            app:layout_constraintTop_toTopOf="parent" />
 
         <Button
-            android:id="@+id/isbn_scan"
+            android:id="@+id/btn_scan_generic_using_front_camera"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_scan_isbn"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/basic_scan" />
+            android:layout_marginStart="16dp"
+            android:text="@string/btn_scan_generic_using_front_camera"
+            app:layout_constraintStart_toEndOf="@id/btn_scan_generic"
+            app:layout_constraintTop_toTopOf="@id/btn_scan_generic" />
 
         <Button
-            android:id="@+id/front_camera"
+            android:id="@+id/btn_scan_product"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/btn_front_camera"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_scan_product"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/isbn_scan" />
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_generic" />
 
-        <TextView
-            android:id="@+id/lbl_last_Scan"
+        <Button
+            android:id="@+id/btn_scan_qr_code"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="20dp"
-            android:textIsSelectable="true"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_scan_qr"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@id/front_camera" />
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_product" />
+
+        <Button
+            android:id="@+id/btn_scan_data_matrix"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/btn_scan_dm"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_qr_code" />
 
         <TextView
             android:id="@+id/last_scan"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:layout_marginTop="32dp"
+            android:background="@color/white"
+            android:padding="8dp"
             android:textIsSelectable="true"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@id/lbl_last_Scan" />
+            app:layout_constraintTop_toBottomOf="@id/btn_scan_data_matrix"
+            tools:text="1234567890123" />
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 
-</ScrollView>
+</androidx.coordinatorlayout.widget.CoordinatorLayout>

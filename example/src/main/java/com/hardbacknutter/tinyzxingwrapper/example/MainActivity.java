@@ -10,10 +10,10 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.camera.core.CameraSelector;
-import androidx.core.graphics.Insets;
-import androidx.core.view.OnApplyWindowInsetsListener;
-import androidx.core.view.ViewCompat;
-import androidx.core.view.WindowInsetsCompat;
+
+import com.google.zxing.BarcodeFormat;
+
+import java.util.List;
 
 import com.hardbacknutter.tinyzxingwrapper.ScanContract;
 import com.hardbacknutter.tinyzxingwrapper.ScanIntentResult;
@@ -59,6 +59,11 @@ public class MainActivity
 
     @Override
     protected void onCreate(@Nullable final Bundle savedInstanceState) {
+        // All insets rely on android:fitsSystemWindows="true"
+        // as set on the top CoordinatorLayout.
+        // The status-bar will be transparent.
+        // Not the "best" look, but more then good enough for this app
+
         // EdgeToEdge on Android pre-15; but only starting Android 11 up
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
             EdgeToEdge.enable(this);
@@ -73,15 +78,22 @@ public class MainActivity
             getWindow().setNavigationBarContrastEnforced(false);
         }
 
-        ViewCompat.setOnApplyWindowInsetsListener(vb.getRoot(), new RootInsetsListener());
-
-        vb.basicScan.setOnClickListener(this::scanBarcode);
-        vb.isbnScan.setOnClickListener(this::scanProduct);
-        vb.frontCamera.setOnClickListener(this::scanBarcodeFrontCamera);
+        vb.btnScanGeneric.setOnClickListener(this::scanGeneric);
+        vb.btnScanGenericUsingFrontCamera.setOnClickListener(this::scanGenericFrontCamera);
+        vb.btnScanProduct.setOnClickListener(this::scanProduct);
+        vb.btnScanQrCode.setOnClickListener(this::scanQr);
+        vb.btnScanDataMatrix.setOnClickListener(this::scanDataMatrix);
     }
 
-    private void scanBarcode(@NonNull final View view) {
+    private void scanGeneric(@NonNull final View view) {
         barcodeLauncher.launch(new ScanOptions());
+    }
+
+    private void scanGenericFrontCamera(@NonNull final View view) {
+        final ScanOptions options = new ScanOptions()
+                .setPrompt(getString(R.string.msg_scan_prompt))
+                .setUseCameraWithLensFacing(CameraSelector.LENS_FACING_FRONT);
+        barcodeLauncher.launch(options);
     }
 
     private void scanProduct(@NonNull final View view) {
@@ -90,27 +102,15 @@ public class MainActivity
         barcodeLauncher.launch(options);
     }
 
-    private void scanBarcodeFrontCamera(@NonNull final View view) {
+    private void scanQr(@NonNull final View view) {
         final ScanOptions options = new ScanOptions()
-                .setPrompt(getString(R.string.msg_scan_prompt))
-                .setUseCameraWithLensFacing(CameraSelector.LENS_FACING_FRONT);
+                .setBarcodeFormats(List.of(BarcodeFormat.QR_CODE));
         barcodeLauncher.launch(options);
     }
 
-    private static class RootInsetsListener
-            implements OnApplyWindowInsetsListener {
-        @NonNull
-        @Override
-        public WindowInsetsCompat onApplyWindowInsets(@NonNull final View v,
-                                                      @NonNull final WindowInsetsCompat wic) {
-            final Insets insets = wic.getInsets(WindowInsetsCompat.Type.systemBars()
-                                                | WindowInsetsCompat.Type.displayCutout());
-
-            v.setPadding(v.getLeft() + insets.left,
-                         v.getTop() + insets.top,
-                         v.getRight() + insets.right,
-                         v.getBottom());
-            return WindowInsetsCompat.CONSUMED;
-        }
+    private void scanDataMatrix(@NonNull final View view) {
+        final ScanOptions options = new ScanOptions()
+                .setBarcodeFormats(List.of(BarcodeFormat.DATA_MATRIX));
+        barcodeLauncher.launch(options);
     }
 }

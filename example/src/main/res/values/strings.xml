@@ -3,10 +3,12 @@
 
     <string name="app_name">TinyZXingWrapper Example</string>
 
-    <string name="btn_scan_barcode">Scan Barcode</string>
-    <string name="btn_scan_isbn">Scan ISBN</string>
+    <string name="btn_scan_generic">Generic</string>
+    <string name="btn_scan_generic_using_front_camera">Generic - front Camera</string>
+    <string name="btn_scan_product">Product</string>
+    <string name="btn_scan_qr">QR code</string>
+
     <string name="btn_scan_inverted">Scan Inverted</string>
-    <string name="btn_front_camera">Use front Camera</string>
 
     <string name="err_cancelled">Cancelled</string>
     <string name="err_permission">Cancelled due to missing camera permission</string>
@@ -17,5 +19,6 @@
     <string name="msg_scan_prompt">Scan something</string>
     <string name="msg_barcode">Barcode: %1$s\nFormat: %2$s</string>
     <string name="msg_intro">Click a button to start a scan</string>
+    <string name="btn_scan_dm">Data Matrix</string>
 
 </resources>
