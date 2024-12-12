@@ -1,5 +1,6 @@
 plugins {
-    id("com.android.application")
+    alias libs.plugins.android.application
+    alias libs.plugins.android.kotlin
 }
 
 /*
@@ -40,7 +41,7 @@ android {
 
         minSdk = rootProject.ext.minSdkVersion
         targetSdk = rootProject.ext.targetSdkVersion
-        
+
         signingConfig(signingConfigs.release)
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
@@ -83,15 +84,14 @@ dependencies {
     // directly from a github release download
     implementation project(path: ":TinyZXingWrapper")
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:${desugarVersion}")
+    coreLibraryDesugaring(libs.google.desugar)
 
-    implementation("androidx.activity:activity:${androidxActivityVersion}")
-    implementation("androidx.fragment:fragment:${androidxFragmentVersion}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${androidxLifecycleVersion}")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:${androidxLifecycleVersion}")
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel)
 
-    implementation ("androidx.camera:camera-view:${androidxCardviewVersion}")
+    implementation(libs.androidx.camera.view)
 
-    // https://github.com/material-components/material-components-android/releases
-    implementation("com.google.android.material:material:${googleMaterialVersion}")
+    implementation(libs.google.material)
 }

@@ -1,6 +1,6 @@
 plugins {
-    id("com.android.library")
-    id("org.jetbrains.kotlin.android")
+    alias libs.plugins.android.library
+    alias libs.plugins.android.kotlin
 }
 
 /*
@@ -26,7 +26,11 @@ kotlin {
 
 ext {
     // build version for the library
-    tinyZXingWrapperVersion = "1.1.0"
+    // 1.1.1: WIP
+    // 1.1.0: bugfix
+    // 1.0.1: translations added, no lib code changes
+    // 1.0.0: initial release
+    tinyZXingWrapperVersion = "1.1.1"
 }
 
 android {
@@ -92,23 +96,22 @@ android {
 }
 
 dependencies {
-    api("com.google.zxing:core:${zxingCoreVersion}")
+    api(libs.zxing.core)
 
-    coreLibraryDesugaring("com.android.tools:desugar_jdk_libs_nio:${desugarVersion}")
+    coreLibraryDesugaring(libs.google.desugar)
 
-    implementation("androidx.activity:activity-ktx:${androidxActivityVersion}")
-    implementation("androidx.fragment:fragment-ktx:${androidxFragmentVersion}")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:${androidxLifecycleVersion}")
-    implementation("androidx.lifecycle:lifecycle-livedata-ktx:$androidxLifecycleVersion")
+    implementation(libs.androidx.activity)
+    implementation(libs.androidx.fragment)
+    implementation(libs.androidx.lifecycle.livedata)
+    implementation(libs.androidx.lifecycle.viewmodel)
 
-    implementation("androidx.camera:camera-core:${androidxCardviewVersion}")
-    implementation("androidx.camera:camera-camera2:${androidxCardviewVersion}")
-    implementation("androidx.camera:camera-lifecycle:${androidxCardviewVersion}")
-    implementation("androidx.camera:camera-view:${androidxCardviewVersion}")
-    implementation("androidx.camera:camera-extensions:${androidxCardviewVersion}")
+    implementation(libs.androidx.camera.camera2)
+    implementation(libs.androidx.camera.core)
+    implementation(libs.androidx.camera.lifecycle)
+    implementation(libs.androidx.camera.view)
+    implementation(libs.androidx.camera.extensions)
 
-    // https://github.com/material-components/material-components-android/releases
-    implementation("com.google.android.material:material:${googleMaterialVersion}")
+    implementation(libs.google.material)
 }
 
 tasks.register("javadocGenerate", Javadoc) {
